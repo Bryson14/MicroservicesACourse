@@ -94,30 +94,43 @@ paths:
                 example: Bad request 
         '200':
           description: Order cancelled successfully.
-    put:
+    patch:
       summary: Update an existing order
       description: Update an existing order
-      operationId: updateOrder
+      operationId: pathOrder
       parameters:
-        - in: path
-        name: id
-        description: Id associated with order 
+        - name: id
+          in: path
+          description: Id associated with order 
+          required: true
+          schema: 
+            type: integer
+            format: int64
+            example: 10
+      requestBody:
         required: true
-        schema: 
-          type: integer
-          format: int64
-        example: 10
+        content:
+          application/json:
+            schema:
+              type: object
+              schema:
+              $ref: '#/components/schemas/Order'
       responses:
         '200':
           description: Order updated
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/Order'          
+            application/xml:
+              schema:
                 $ref: '#/components/schemas/Order'
         '400':
           description: Invalid ID supplied
         '404':
-          description: Order ID not found
+          description: Order not found
+        '405':
+          description: Validation exception
 components:
   schemas:
     Order:
