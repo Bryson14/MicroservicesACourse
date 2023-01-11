@@ -32,5 +32,23 @@
             "customerName": "Jonathan"
         }
     },
+    "items": {
+        "1": {
+            "id": 1,
+            "name": "Best Latte In the World",
+            "price": 10
+        },
+        "2": {
+            "id": 2,
+            "name": "Best Bagel In the World",
+            "price": 5
+        },
+        "3": {
+            "id": 3,
+            "name": "Best Cafe Cubano In the World",
+            "price": 4
+        }
+    },
+
     "next_id": 3
 }
