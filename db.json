@@ -1,0 +1,36 @@
+{
+    "orders": {
+        "1": {
+            "id": 1,
+            "orderItems": [
+                {
+                    "id": 1,
+                    "name": "Best Latte In the World",
+                    "price": 10
+                },
+                {
+                    "id": 2,
+                    "name": "Best Bagel In the World",
+                    "price": 5
+                }
+            ],
+            "createdTimestamp": "2023-01-11T00:00:00Z",
+            "status": "placed",
+            "customerName": "Bryson"
+        },
+        "2": {
+            "id": 2,
+            "orderItems": [
+                {
+                    "id": 3,
+                    "name": "Best Cafe Cubano In the World",
+                    "price": 4
+                }
+            ],
+            "createdTimestamp": "2023-01-11T01:00:00Z",
+            "status": "delivered",
+            "customerName": "Jonathan"
+        }
+    },
+    "next_id": 3
+}
