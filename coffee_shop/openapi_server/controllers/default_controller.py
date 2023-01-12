@@ -88,6 +88,18 @@ def order_post(new_order=None):  # noqa: E501
 
         if set(new_order.keys()) != required_keys:
             return 'Required Order items not provided', 401
+        
+        required_keys_items = set(
+            [
+            'price',
+            'name',
+            'uid',
+            ]
+        )
+        for item in new_order['orderItems']:
+            if set(item.keys()) != required_keys_items:
+                return "Invalid item to add", 401
+                
         _id = db["next_uid"]
         new_order["uid"] = _id
         new_order["createdTimestamp"] = str(datetime.now())
@@ -148,13 +160,13 @@ def patch_order(uid, status, item=None):  # noqa: E501
     if status not in ['placed', 'delivered']:
             return "Invalid status update", 401
 
+    order_found = False
     for k, v in db["orders"].items():
         if v['uid'] == uid:
             print("Updating Status Order... ")
             print(uid)
             print(status)
             v["status"] = status
-
             if item:
                 v["orderItems"].append(item)
 
