@@ -123,8 +123,8 @@ def orders_get(customer_name=None):  # noqa: E501
     return all_orders, 200
 
 
-def path_order(id, order):  # noqa: E501
-     """Update an existing order
+def path_order(id_, status, order):  # noqa: E501
+    """Update an existing order
     Update an existing order # noqa: E501
     :param id: Id associated with order
     :type id: int
@@ -137,9 +137,9 @@ def path_order(id, order):  # noqa: E501
     #find the matching id and delete that order using pop
     order_found = False
     for k, v in db["orders"].items():
-        if v['id'] == id:
+        if v['id'] == id_:
             print("Updating Status Order... ")
-            print(id)
+            print(id_)
             print(status)
             db["orders"]["status"] = status
             order_found = True
