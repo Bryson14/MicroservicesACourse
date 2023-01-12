@@ -12,7 +12,7 @@ def read_db() -> dict:
 
 
 def save_db(data) -> None:
-    with open(DB_FILE) as file:
+    with open(DB_FILE, 'w') as file:
         json.dump(data, file)
 
 

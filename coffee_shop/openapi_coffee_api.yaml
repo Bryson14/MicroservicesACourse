@@ -72,7 +72,7 @@ paths:
                 type: object
                 schema:
                 $ref: "#/components/schemas/Order"
-        "404":
+        "406":
           description: Order ID not found
           content:
             application/json:
@@ -92,7 +92,7 @@ paths:
             type: integer
             format: int64
       responses:
-        "400":
+        "406":
           description: Invalid order ID, please try again.
           content:
             application/json:

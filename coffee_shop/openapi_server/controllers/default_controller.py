@@ -9,17 +9,37 @@ from openapi_server import util
 from openapi_server import db_utils
 
 
-def delete_order(id):  # noqa: E501
+def delete_order(id_):  # noqa: E501
+
     """Cancels an order
-
     Canceles an order # noqa: E501
-
     :param id: Order ID to delete
     :type id: int
-
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
-    return 'do some magic!'
+
+    #Import the data base
+
+    db = db_utils.read_db()
+    #find the matching id and delete that order using pop
+
+    for k, v in db["orders"].items():
+        if v['id'] == id_:
+
+            print("deleting... ")
+            print(id_)
+            db["orders"].pop(k)
+            break
+
+        else:
+            #no order id found
+            print('No order id found')
+            return 406
+
+    #rewrite the json file :)
+    db_utils.save_db(db)
+
+    return 200
 
 
 def order_id_get(id_):  # noqa: E501
