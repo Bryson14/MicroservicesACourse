@@ -86,7 +86,7 @@ def orders_get(customer_name=None):  # noqa: E501
     if customer_name:
         json_orders = {str(o["id"]): o for o in all_orders.values() if o["customerName"] == customer_name}
         return json_orders
-    return all_orders
+    return all_orders, 200
 
 
 def path_order(id, order):  # noqa: E501
