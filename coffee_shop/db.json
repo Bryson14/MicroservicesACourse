@@ -1,24 +1,54 @@
 {
-    "orders": [
-        {
-            "createdTimestamp": "2023-01-23T04:56:07+00:00",
-            "customerName": "Huzaifah Shamim",
-            "discount": 2,
-            "id": 10,
-            "orderItems": [
+  "orders": {
+      "1": {
+          "id": 1,
+          "orderItems": [
               {
-                "Name": "Bagel",
-                "Price": 2.99,
-                "id": 0
+                  "id": 1,
+                  "name": "Best Latte In the World",
+                  "price": 10
               },
               {
-                "Name": "Best Latte Ever",
-                "Price": 6.99,
-                "id": 0
+                  "id": 2,
+                  "name": "Best Bagel In the World",
+                  "price": 5
               }
-            ],
-            "status": "placed"
-          }
-    ],
-    "next_id": 1
+          ],
+          "createdTimestamp": "2023-01-11T00:00:00Z",
+          "status": "placed",
+          "customerName": "Bryson"
+      },
+      "2": {
+          "id": 2,
+          "orderItems": [
+              {
+                  "id": 3,
+                  "name": "Best Cafe Cubano In the World",
+                  "price": 4
+              }
+          ],
+          "createdTimestamp": "2023-01-11T01:00:00Z",
+          "status": "delivered",
+          "customerName": "Jonathan"
+      }
+  },
+  "items": {
+      "1": {
+          "id": 1,
+          "name": "Best Latte In the World",
+          "price": 10
+      },
+      "2": {
+          "id": 2,
+          "name": "Best Bagel In the World",
+          "price": 5
+      },
+      "3": {
+          "id": 3,
+          "name": "Best Cafe Cubano In the World",
+          "price": 4
+      }
+  },
+
+  "next_id": 3
 }

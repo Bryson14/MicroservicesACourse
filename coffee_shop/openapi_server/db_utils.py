@@ -22,8 +22,7 @@ def reset_db() -> None:
     data[ORDER_KEY] = []
 
 
-def get_value(key) -> Order:
-    data = read_db()
+def get_value(data, key) -> Order:
     if key in data:
         return data[key]
     else:

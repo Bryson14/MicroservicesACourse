@@ -22,7 +22,7 @@ def delete_order(id):  # noqa: E501
     return 'do some magic!'
 
 
-def order_id_get(id):  # noqa: E501
+def order_id_get(id_):  # noqa: E501
     """Returns a given order id as json
 
      # noqa: E501
@@ -32,9 +32,12 @@ def order_id_get(id):  # noqa: E501
 
     :rtype: Union[Order, Tuple[Order, int], Tuple[Order, int, Dict[str, str]]
     """
-    order = db_utils.get_value(int(id))
+    data = db_utils.read_db()['orders']
+    order = db_utils.get_value(data, str(id_))
+
     if not order:
-        return "No ID found"
+        return "No ID found", 404
+
     return order
 
 
