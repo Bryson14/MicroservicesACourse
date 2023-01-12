@@ -1,0 +1,24 @@
+{
+    "orders": [
+        {
+            "createdTimestamp": "2023-01-23T04:56:07+00:00",
+            "customerName": "Huzaifah Shamim",
+            "discount": 2,
+            "id": 10,
+            "orderItems": [
+              {
+                "Name": "Bagel",
+                "Price": 2.99,
+                "id": 0
+              },
+              {
+                "Name": "Best Latte Ever",
+                "Price": 6.99,
+                "id": 0
+              }
+            ],
+            "status": "placed"
+          }
+    ],
+    "next_id": 1
+}
