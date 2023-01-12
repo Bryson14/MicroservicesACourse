@@ -8,6 +8,7 @@ from openapi_server.models.order import Order  # noqa: E501
 from openapi_server import util
 from openapi_server import db_utils
 
+from datetime import datetime
 
 def delete_order(id_):  # noqa: E501
 
@@ -61,15 +62,48 @@ def order_id_get(id_):  # noqa: E501
     return order
 
 
-def order_post():  # noqa: E501
+def order_post(new_order=None):  # noqa: E501
     """Add a new order
 
     Place a new unique order onto the queue # noqa: E501
 
+    :param new_order: 
+    :type new_order: dict | bytes
 
     :rtype: Union[Order, Tuple[Order, int], Tuple[Order, int, Dict[str, str]]
     """
-    return 'do some magic!'
+    if connexion.request.is_json:
+        new_order = connexion.request.get_json()
+        db = db_utils.read_db()
+
+        # If the order does not match the order schema the input was malformed
+        required_keys = set(
+            [
+            'orderItems',
+            'status',
+            'customerName',
+            'discount'
+            ]
+        )
+
+        if set(new_order.keys()) != required_keys:
+            return 'Required Order items not provided', 401
+        _id = db["next_id"]
+        new_order["id"] = _id
+        new_order["createdTimestamp"] = str(datetime.now())
+
+
+        # Attempt to insert
+        inserted = db_utils.insert_data(_id, new_order)
+
+        # Return if inserted, else return a internal error
+        if inserted:
+            return 'Order Inserted', 200
+        else:
+            return 'Error inserting order', 500
+
+    # If json not provided then return 401
+    return 'Input not in JSON Format', 401
 
 
 def orders_get(customer_name=None):  # noqa: E501

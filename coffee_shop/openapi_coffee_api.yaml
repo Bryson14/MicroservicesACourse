@@ -36,6 +36,16 @@ paths:
     post:
       summary: Add a new order
       description: Place a new unique order onto the queue
+      requestBody:
+        description: A new order object without time/id fields of an order
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              schema:
+              $ref: "#/components/schemas/NewOrder"
+          
       responses:
         "200":
           description: The order object of the newly created order
@@ -187,7 +197,33 @@ components:
           type: number
           format: float
       xml:
-        name: order
+        name: item
+    NewOrder:
+      type: object
+      properties:
+        orderItems:
+          type: array
+          items:
+            type: object
+            schema:
+            $ref: "#/components/schemas/Item"
+        status:
+          type: string
+          description: Order Status
+          example: placed
+          enum:
+            - placed
+            - delivered
+        customerName:
+          type: string
+          description: The name of the customer ordering
+          example: Huzaifah Shamim
+        discount:
+          type: number
+          format: float
+          example: 2.00
+      xml:
+        name: new_order
     Customer:
       type: object
       properties:
@@ -208,4 +244,4 @@ components:
           example: 5030
 
       xml:
-        name: order
+        name: customer
