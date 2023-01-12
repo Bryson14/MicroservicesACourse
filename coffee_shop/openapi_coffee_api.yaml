@@ -59,7 +59,7 @@ paths:
             application/json:
               schema:
                 type: string
-                example: "Required Order items not provided"
+                example: "Invalid item to add"
   /order/{uid}:
     get:
       summary: Returns a given order uid as json
