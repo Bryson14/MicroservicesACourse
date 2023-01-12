@@ -2,7 +2,7 @@ import json
 from openapi_server.models import Order
 
 DB_FILE = "db.json"
-NEXT_KEY = "next_id"
+NEXT_KEY = "next_uid"
 ORDER_KEY = "orders"
 
 
@@ -34,16 +34,12 @@ def get_all_orders():
     return data[ORDER_KEY]
 
 
-def insert_data(order_id, order_obj) -> bool:
+def insert_data(order_uid, order_dict) -> bool:
     data = read_db()
-    if order_id in data:
-        return False
-    elif not isinstance(order_obj, Order):
-        print("object_obj is not an instance of Order")
+    if order_uid in data:
         return False
     else:
-        next_id = data[NEXT_KEY]
-        data[ORDER_KEY][next_id] = order_obj
-        data[NEXT_KEY] = next_id + 1
+        data[NEXT_KEY] += 1
+        data["orders"][order_uid] = order_dict
         save_db(data)
         return True

@@ -14,6 +14,7 @@ openapi_server/models/__init__.py
 openapi_server/models/base_model_.py
 openapi_server/models/customer.py
 openapi_server/models/item.py
+openapi_server/models/new_order.py
 openapi_server/models/order.py
 openapi_server/openapi/openapi.yaml
 openapi_server/test/__init__.py

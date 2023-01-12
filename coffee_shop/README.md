@@ -24,12 +24,6 @@ and open your browser to here:
 http://localhost:8080/ui/
 ```
 
-To update the current version of the yaml file definition:
-
-```
-npx @openapitools/openapi-generator-cli generate -i .\openapi_coffee_api.yaml -g python-flask
-```
-
 Your OpenAPI definition lives here:
 
 ```

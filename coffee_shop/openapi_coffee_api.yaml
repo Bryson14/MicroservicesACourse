@@ -4,10 +4,9 @@ info:
   description: |-
     This is the best coffee shop in the world, as featured on the hit movie, ELF.
 
-    - [coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
+    - [Coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
   contact:
     email: joshua.haddad@ge.com
-    url: https://github.com/Bryson14/MicroservicesACourse
   version: 1.0.11
 paths:
   /orders:
@@ -17,7 +16,6 @@ paths:
       parameters:
         - in: query
           name: customerName
-          required: false
           schema:
             type: string
           description: The name of the customer to filter the result by
@@ -36,6 +34,16 @@ paths:
     post:
       summary: Add a new order
       description: Place a new unique order onto the queue
+      requestBody:
+        description: A new order object without time/uid fields of an order
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              schema:
+              $ref: "#/components/schemas/NewOrder"
+          
       responses:
         "200":
           description: The order object of the newly created order
@@ -46,26 +54,26 @@ paths:
                 schema:
                 $ref: "#/components/schemas/Order"
         "401":
-          description: Bad request message
+          description: Bad request due to not having required fields for the order, trying to insert an insert an invalid item, or other misformatting errors.
           content:
             application/json:
               schema:
                 type: string
-                example: Bad request due to duplicate information or whatever
-  /order/{id}:
+                example: "Invalid item to add"
+  /order/{uid}:
     get:
-      summary: Returns a given order id as json
+      summary: Returns a given order uid as json
       parameters:
         - in: path
-          name: id
-          description: The id associated with an order
+          name: uid
+          description: The uid associated with an order
           required: true
           schema:
             type: integer
           example: 10
       responses:
         "200":
-          description: A JSON representation of a single order given by the id
+          description: A JSON representation of a single order given by the uid
           content:
             application/json:
               schema:
@@ -73,55 +81,68 @@ paths:
                 schema:
                 $ref: "#/components/schemas/Order"
         "406":
-          description: Order ID not found
+          description: Order uid not found
           content:
             application/json:
               schema:
                 type: string
-                example: Order ID not found
+                example: No order with this uid found
     delete:
       summary: Cancels an order
-      description: Canceles an order
+      description: Cancels an order
       operationId: deleteOrder
       parameters:
-        - name: id
+        - name: uid
           in: path
-          description: Order ID to delete
+          description: Order uid to delete
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "406":
-          description: Invalid order ID, please try again.
+          description: Invalid order uid
           content:
             application/json:
               schema:
                 type: string
-                example: Bad request
+                example: No order with this uid found
         "200":
-          description: Order cancelled successfully.
+          description: Order Deleted
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Order Deleted
+  /order/{uid}/{status}:
     patch:
       summary: Update an existing order
-      description: Update an existing order
-      operationId: pathOrder
+      description: Update an existing order's status or add a single item to the order.
+      operationId: patchOrder
       parameters:
-        - name: id
+        - name: uid
           in: path
-          description: Id associated with order
+          description: Unique id associated with order
           required: true
           schema:
             type: integer
             format: int64
             example: 10
+        - name: status
+          in: path
+          description: Change order status
+          required: true
+          schema:
+            type: string
+            example: "delivered"
       requestBody:
-        required: true
+        description: Json of item to add
         content:
           application/json:
             schema:
               type: object
               schema:
-              $ref: "#/components/schemas/Order"
+              $ref: "#/components/schemas/Item"
       responses:
         "200":
           description: Order updated
@@ -129,21 +150,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Order"
+                example: Order Updated
             application/xml:
               schema:
                 $ref: "#/components/schemas/Order"
-        "400":
-          description: Invalid ID supplied
-        "404":
-          description: Order not found
-        "405":
-          description: Validation exception
+        "401":
+          description: Invalid format of status or order item to add
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Invalid status update please choose 'placed' or 'delivered'
+        "406":
+          description: Order with uid provided not found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: No order with this uid found
 components:
   schemas:
     Order:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10
@@ -176,26 +206,52 @@ components:
     Item:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10.99
-        Name:
+        name:
           type: string
           example: "Best Latte Ever"
-        Price:
+        price:
           type: number
           format: float
       xml:
-        name: order
+        name: item
+    NewOrder:
+      type: object
+      properties:
+        orderItems:
+          type: array
+          items:
+            type: object
+            schema:
+            $ref: "#/components/schemas/Item"
+        status:
+          type: string
+          description: Order Status
+          example: placed
+          enum:
+            - placed
+            - delivered
+        customerName:
+          type: string
+          description: The name of the customer ordering
+          example: Huzaifah Shamim
+        discount:
+          type: number
+          format: float
+          example: 2.00
+      xml:
+        name: new_order
     Customer:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10
-        Name:
+        name:
           type: string
           example: "Bryson Meiling"
         birthday:
@@ -208,4 +264,4 @@ components:
           example: 5030
 
       xml:
-        name: order
+        name: customer
