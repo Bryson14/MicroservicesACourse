@@ -15,11 +15,11 @@ class Customer(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id=None, name=None, birthday=None, reward_points=None):  # noqa: E501
+    def __init__(self, uid=None, name=None, birthday=None, reward_points=None):  # noqa: E501
         """Customer - a model defined in OpenAPI
 
-        :param id: The id of this Customer.  # noqa: E501
-        :type id: int
+        :param uid: The uid of this Customer.  # noqa: E501
+        :type uid: int
         :param name: The name of this Customer.  # noqa: E501
         :type name: str
         :param birthday: The birthday of this Customer.  # noqa: E501
@@ -28,20 +28,20 @@ class Customer(Model):
         :type reward_points: int
         """
         self.openapi_types = {
-            'id': int,
+            'uid': int,
             'name': str,
             'birthday': date,
             'reward_points': int
         }
 
         self.attribute_map = {
-            'id': 'id',
-            'name': 'Name',
+            'uid': 'uid',
+            'name': 'name',
             'birthday': 'birthday',
             'reward_points': 'rewardPoints'
         }
 
-        self._id = id
+        self._uid = uid
         self._name = name
         self._birthday = birthday
         self._reward_points = reward_points
@@ -58,25 +58,25 @@ class Customer(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self):
-        """Gets the id of this Customer.
+    def uid(self):
+        """Gets the uid of this Customer.
 
 
-        :return: The id of this Customer.
+        :return: The uid of this Customer.
         :rtype: int
         """
-        return self._id
+        return self._uid
 
-    @id.setter
-    def id(self, id):
-        """Sets the id of this Customer.
+    @uid.setter
+    def uid(self, uid):
+        """Sets the uid of this Customer.
 
 
-        :param id: The id of this Customer.
-        :type id: int
+        :param uid: The uid of this Customer.
+        :type uid: int
         """
 
-        self._id = id
+        self._uid = uid
 
     @property
     def name(self):

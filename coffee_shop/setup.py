@@ -33,7 +33,7 @@ setup(
     entry_points={
         'console_scripts': ['openapi_server=openapi_server.__main__:main']},
     long_description="""\
-    This is the best coffee shop in the world, as featured on the hit movie, ELF.  - [coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
+    This is the best coffee shop in the world, as featured on the hit movie, ELF.  - [Coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
     """
 )
 

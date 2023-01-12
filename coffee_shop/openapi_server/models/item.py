@@ -15,29 +15,29 @@ class Item(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id=None, name=None, price=None):  # noqa: E501
+    def __init__(self, uid=None, name=None, price=None):  # noqa: E501
         """Item - a model defined in OpenAPI
 
-        :param id: The id of this Item.  # noqa: E501
-        :type id: int
+        :param uid: The uid of this Item.  # noqa: E501
+        :type uid: int
         :param name: The name of this Item.  # noqa: E501
         :type name: str
         :param price: The price of this Item.  # noqa: E501
         :type price: float
         """
         self.openapi_types = {
-            'id': int,
+            'uid': int,
             'name': str,
             'price': float
         }
 
         self.attribute_map = {
-            'id': 'id',
-            'name': 'Name',
-            'price': 'Price'
+            'uid': 'uid',
+            'name': 'name',
+            'price': 'price'
         }
 
-        self._id = id
+        self._uid = uid
         self._name = name
         self._price = price
 
@@ -53,25 +53,25 @@ class Item(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self):
-        """Gets the id of this Item.
+    def uid(self):
+        """Gets the uid of this Item.
 
 
-        :return: The id of this Item.
+        :return: The uid of this Item.
         :rtype: int
         """
-        return self._id
+        return self._uid
 
-    @id.setter
-    def id(self, id):
-        """Sets the id of this Item.
+    @uid.setter
+    def uid(self, uid):
+        """Sets the uid of this Item.
 
 
-        :param id: The id of this Item.
-        :type id: int
+        :param uid: The uid of this Item.
+        :type uid: int
         """
 
-        self._id = id
+        self._uid = uid
 
     @property
     def name(self):
