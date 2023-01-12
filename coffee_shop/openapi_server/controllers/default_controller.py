@@ -64,10 +64,7 @@ def orders_get(customer_name=None):  # noqa: E501
     """
     all_orders = db_utils.get_all_orders()
     if customer_name:
-        all_orders = [Order.from_dict(o) for o in all_orders]
-        filtered_orders = list(
-            filter(lambda o: o.customerName == customer_name))
-        json_orders = [o.to_dict() for o in filtered_orders]
+        json_orders = {str(o["id"]): o for o in all_orders.values() if o["customerName"] == customer_name}
         return json_orders
     return all_orders
 
