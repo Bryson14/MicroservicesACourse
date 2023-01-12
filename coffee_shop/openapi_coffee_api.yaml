@@ -3,7 +3,7 @@ info:
   title: Coffee Shop - OpenAPI 3.0
   description: |-
     This is the best coffee shop in the world, as featured on the hit movie, ELF.
-    
+
     - [coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
   contact:
     email: joshua.haddad@ge.com
@@ -11,7 +11,7 @@ info:
   version: 1.0.11
 servers:
   - url: http://api.example.com/v1
-    description: Optional server description, e.g. Main (production) server. Our head barista. 
+    description: Optional server description, e.g. Main (production) server. Our head barista.
   - url: http://staging-api.example.com
     description: Optional server description, e.g. Internal staging server for testing. Our trainee
 paths:
@@ -27,7 +27,7 @@ paths:
             type: string
           description: The name of the customer to filter the result by
       responses:
-        '200':
+        "200":
           description: A JSON array of order objects
           content:
             application/json:
@@ -36,21 +36,21 @@ paths:
                 items:
                   type: object
                   schema:
-                  $ref: '#/components/schemas/Order'
+                  $ref: "#/components/schemas/Order"
   /order:
     post:
       summary: Add a new order
       description: Place a new unique order onto the queue
       responses:
-        '200':
+        "200":
           description: The order object of the newly created order
           content:
             application/json:
               schema:
                 type: object
                 schema:
-                $ref: '#/components/schemas/Order'
-        '401':
+                $ref: "#/components/schemas/Order"
+        "401":
           description: Bad request message
           content:
             application/json:
@@ -69,15 +69,15 @@ paths:
             type: integer
           example: 10
       responses:
-        '200':
+        "200":
           description: A JSON representation of a single order given by the id
           content:
             application/json:
               schema:
                 type: object
                 schema:
-                $ref: '#/components/schemas/Order'
-        '404':
+                $ref: "#/components/schemas/Order"
+        "404":
           description: Order ID not found
           content:
             application/json:
@@ -97,14 +97,14 @@ paths:
             type: integer
             format: int64
       responses:
-        '400':
+        "400":
           description: Invalid order ID, please try again.
           content:
             application/json:
               schema:
                 type: string
-                example: Bad request 
-        '200':
+                example: Bad request
+        "200":
           description: Order cancelled successfully.
     patch:
       summary: Update an existing order
@@ -113,9 +113,9 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Id associated with order 
+          description: Id associated with order
           required: true
-          schema: 
+          schema:
             type: integer
             format: int64
             example: 10
@@ -126,22 +126,22 @@ paths:
             schema:
               type: object
               schema:
-              $ref: '#/components/schemas/Order'
+              $ref: "#/components/schemas/Order"
       responses:
-        '200':
+        "200":
           description: Order updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'          
+                $ref: "#/components/schemas/Order"
             application/xml:
               schema:
-                $ref: '#/components/schemas/Order'
-        '400':
+                $ref: "#/components/schemas/Order"
+        "400":
           description: Invalid ID supplied
-        '404':
+        "404":
           description: Order not found
-        '405':
+        "405":
           description: Validation exception
 components:
   schemas:
@@ -156,8 +156,8 @@ components:
           type: array
           items:
             type: object
-            schema: 
-            $ref: '#/components/schemas/Item'
+            schema:
+            $ref: "#/components/schemas/Item"
         createdTimestamp:
           type: string
           format: date-time
@@ -211,7 +211,6 @@ components:
           type: integer
           format: int32
           example: 5030
-        
-        
+
       xml:
         name: order
