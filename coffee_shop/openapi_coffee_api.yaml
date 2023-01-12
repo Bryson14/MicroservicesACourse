@@ -16,8 +16,7 @@ paths:
       description: Gets all the orders that are currently open
       parameters:
         - in: query
-          name: customerName
-          required: false
+          name: customername
           schema:
             type: string
           description: The name of the customer to filter the result by
@@ -37,7 +36,7 @@ paths:
       summary: Add a new order
       description: Place a new unique order onto the queue
       requestBody:
-        description: A new order object without time/id fields of an order
+        description: A new order object without time/uid fields of an order
         required: true
         content:
           application/json:
@@ -62,20 +61,20 @@ paths:
               schema:
                 type: string
                 example: Bad request due to duplicate information or whatever
-  /order/{id}:
+  /order/{uid}:
     get:
-      summary: Returns a given order id as json
+      summary: Returns a given order uid as json
       parameters:
         - in: path
-          name: id
-          description: The id associated with an order
+          name: uid
+          description: The uid associated with an order
           required: true
           schema:
             type: integer
           example: 10
       responses:
         "200":
-          description: A JSON representation of a single order given by the id
+          description: A JSON representation of a single order given by the uid
           content:
             application/json:
               schema:
@@ -83,27 +82,27 @@ paths:
                 schema:
                 $ref: "#/components/schemas/Order"
         "406":
-          description: Order ID not found
+          description: Order uid not found
           content:
             application/json:
               schema:
                 type: string
-                example: Order ID not found
+                example: Order uid not found
     delete:
       summary: Cancels an order
       description: Canceles an order
       operationId: deleteOrder
       parameters:
-        - name: id
+        - name: uid
           in: path
-          description: Order ID to delete
+          description: Order uid to delete
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "406":
-          description: Invalid order ID, please try again.
+          description: Invaluid order uid, please try again.
           content:
             application/json:
               schema:
@@ -111,15 +110,15 @@ paths:
                 example: Bad request
         "200":
           description: Order cancelled successfully.
-  /order/{id}/{status}:
+  /order/{uid}/{status}:
     patch:
       summary: Update an existing order
       description: Update an existing order
-      operationId: pathOrder
+      operationId: patchOrder
       parameters:
-        - name: id
+        - name: uid
           in: path
-          description: Id associated with order
+          description: uid associated with order
           required: true
           schema:
             type: integer
@@ -131,15 +130,15 @@ paths:
           required: true
           schema:
             type: string
-            example: "Delivered"
+            example: "delivered"
       requestBody:
-        required: true
+        description: Json of item to add
         content:
           application/json:
             schema:
               type: object
               schema:
-              $ref: "#/components/schemas/Order"
+              $ref: "#/components/schemas/Item"
       responses:
         "200":
           description: Order updated
@@ -151,53 +150,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/Order"
         "400":
-          description: Invalid ID supplied
+          description: Invaluid uid supplied
+        "401":
+          description: Invalid format
         "404":
           description: Order not found
-        "405":
-          description: Validation exception
-      summary: Update an existing order
-      description: Update an existing order
-      operationId: pathOrder
-      parameters:
-        - name: id
-          in: path
-          description: Id associated with order
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 10
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              schema:
-              $ref: "#/components/schemas/Order"
-      responses:
-        "200":
-          description: Order updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Order"
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Order"
-        "400":
-          description: Invalid ID supplied
-        "404":
-          description: Order not found
-        "405":
+        "406":
           description: Validation exception
 components:
   schemas:
     Order:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10
@@ -217,7 +182,7 @@ components:
           enum:
             - placed
             - delivered
-        customerName:
+        customername:
           type: string
           description: The name of the customer ordering
           example: Huzaifah Shamim
@@ -230,14 +195,14 @@ components:
     Item:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10.99
-        Name:
+        name:
           type: string
           example: "Best Latte Ever"
-        Price:
+        price:
           type: number
           format: float
       xml:
@@ -258,7 +223,7 @@ components:
           enum:
             - placed
             - delivered
-        customerName:
+        customername:
           type: string
           description: The name of the customer ordering
           example: Huzaifah Shamim
@@ -271,11 +236,11 @@ components:
     Customer:
       type: object
       properties:
-        id:
+        uid:
           type: integer
           format: int64
           example: 10
-        Name:
+        name:
           type: string
           example: "Bryson Meiling"
         birthday:

@@ -10,32 +10,32 @@ from openapi_server import db_utils
 
 from datetime import datetime
 
-def delete_order(id_):  # noqa: E501
+def delete_order(uid):  # noqa: E501
 
     """Cancels an order
     Canceles an order # noqa: E501
-    :param id: Order ID to delete
-    :type id: int
+    :param uid: Order uid to delete
+    :type uid: int
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
 
     #Import the data base
 
     db = db_utils.read_db()
-    #find the matching id and delete that order using pop
+    #find the matching uid and delete that order using pop
     order_found = False
     for k, v in db["orders"].items():
-        if v['id'] == id_:
+        if v['uid'] == uid:
 
             print("deleting... ")
-            print(id_)
+            print(uid)
             db["orders"].pop(k)
             order_found = True
             break 
 
     if not order_found:
-        print('No order id found')
-        return 'No Order with this ID Found', 406
+        print('No order uid found')
+        return 'No Order with this uid Found', 406
 
     #rewrite the json file :)
     db_utils.save_db(db)
@@ -43,21 +43,21 @@ def delete_order(id_):  # noqa: E501
     return 'Order Deleted', 200
 
 
-def order_id_get(id_):  # noqa: E501
-    """Returns a given order id as json
+def order_uid_get(uid):  # noqa: E501
+    """Returns a given order uid as json
 
      # noqa: E501
 
-    :param id: The id associated with an order
-    :type id: int
+    :param uid: The uid associated with an order
+    :type uid: int
 
     :rtype: Union[Order, Tuple[Order, int], Tuple[Order, int, Dict[str, str]]
     """
     data = db_utils.read_db()['orders']
-    order = db_utils.get_value(data, str(id_))
+    order = db_utils.get_value(data, str(uid))
 
     if not order:
-        return "No Order with this ID found", 406
+        return "No Order with this uid found", 406
 
     return order
 
@@ -88,8 +88,8 @@ def order_post(new_order=None):  # noqa: E501
 
         if set(new_order.keys()) != required_keys:
             return 'Required Order items not provided', 401
-        _id = db["next_id"]
-        new_order["id"] = _id
+        _id = db["next_uid"]
+        new_order["uid"] = _id
         new_order["createdTimestamp"] = str(datetime.now())
 
 
@@ -118,38 +118,55 @@ def orders_get(customer_name=None):  # noqa: E501
     """
     all_orders = db_utils.get_all_orders()
     if customer_name:
-        json_orders = {str(o["id"]): o for o in all_orders.values() if o["customerName"] == customer_name}
+        json_orders = {str(o["uid"]): o for o in all_orders.values() if o["customerName"] == customer_name}
         return json_orders
     return all_orders, 200
 
-
-def path_order(id_, status, order):  # noqa: E501
+def patch_order(uid, status, item=None):  # noqa: E501
     """Update an existing order
     Update an existing order # noqa: E501
-    :param id: Id associated with order
-    :type id: int
+    :param uid: uid associated with order
+    :type uid: int
     :param order:
     :type order: dict | bytes
     :rtype: Union[Order, Tuple[Order, int], Tuple[Order, int, Dict[str, str]]
     """
 
     db = db_utils.read_db()
-    #find the matching id and delete that order using pop
-    order_found = False
+    required_keys = set(
+        [
+            'price',
+            'name',
+            'uid',
+        ]
+    )
+    if connexion.request.is_json:
+        item = connexion.request.get_json()
+        if set(item.keys()) != required_keys:
+            return "Invalid item to add", 401
+    
+    if status not in ['placed', 'delivered']:
+            return "Invalid status update", 401
+
     for k, v in db["orders"].items():
-        if v['id'] == id_:
+        if v['uid'] == uid:
             print("Updating Status Order... ")
-            print(id_)
+            print(uid)
             print(status)
-            db["orders"]["status"] = status
+            v["status"] = status
+
+            if item:
+                v["orderItems"].append(item)
+
             order_found = True
             break
             
     if not order_found:
-        print('No order id found')
-        return 'No Order with this ID Found', 406
+        print('No order uid found')
+        return 'No Order with this uid Found', 406
 
     #rewrite the json file :)
     db_utils.save_db(db)
 
     return 'Order Updated', 200
+
