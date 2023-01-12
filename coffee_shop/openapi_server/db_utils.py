@@ -12,7 +12,7 @@ def read_db() -> dict:
 
 
 def save_db(data) -> None:
-    with open(DB_FILE) as file:
+    with open(DB_FILE, 'w') as file:
         json.dump(data, file)
 
 
@@ -22,8 +22,7 @@ def reset_db() -> None:
     data[ORDER_KEY] = []
 
 
-def get_value(key) -> Order:
-    data = read_db()
+def get_value(data, key) -> Order:
     if key in data:
         return data[key]
     else:
