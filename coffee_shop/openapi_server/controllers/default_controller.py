@@ -36,7 +36,7 @@ def order_id_get(id_):  # noqa: E501
     order = db_utils.get_value(data, str(id_))
 
     if not order:
-        return "No ID found", 404
+        return "No Order with this ID found", 406
 
     return order
 
