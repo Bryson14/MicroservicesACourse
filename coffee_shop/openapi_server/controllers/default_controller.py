@@ -124,24 +124,32 @@ def orders_get(customer_name=None):  # noqa: E501
 
 
 def path_order(id, order):  # noqa: E501
-    """Update an existing order
-
+     """Update an existing order
     Update an existing order # noqa: E501
-
     :param id: Id associated with order
     :type id: int
-    :param order: 
+    :param order:
     :type order: dict | bytes
-
     :rtype: Union[Order, Tuple[Order, int], Tuple[Order, int, Dict[str, str]]
     """
-    if connexion.request.is_json:
-        order = Order.from_dict(connexion.request.get_json())  # noqa: E501
-        db_obj = db_utils.get_value(id)
-        if db_obj:
-            db_order = Order.from_dict(db_obj)
-            # todo
-            return "updated"
-        else:
-            return "ID not found"
-    return "Invalid object"
+
+    db = db_utils.read_db()
+    #find the matching id and delete that order using pop
+    order_found = False
+    for k, v in db["orders"].items():
+        if v['id'] == id:
+            print("Updating Status Order... ")
+            print(id)
+            print(status)
+            db["orders"]["status"] = status
+            order_found = True
+            break
+            
+    if not order_found:
+        print('No order id found')
+        return 'No Order with this ID Found', 406
+
+    #rewrite the json file :)
+    db_utils.save_db(db)
+
+    return 'Order Updated', 200

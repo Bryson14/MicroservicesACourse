@@ -34,16 +34,12 @@ def get_all_orders():
     return data[ORDER_KEY]
 
 
-def insert_data(order_id, order_obj) -> bool:
+def insert_data(order_id, order_dict) -> bool:
     data = read_db()
     if order_id in data:
         return False
-    elif not isinstance(order_obj, Order):
-        print("object_obj is not an instance of Order")
-        return False
     else:
-        next_id = data[NEXT_KEY]
-        data[ORDER_KEY][next_id] = order_obj
-        data[NEXT_KEY] = next_id + 1
+        data[NEXT_KEY] += 1
+        data["orders"][order_id] = order_dict
         save_db(data)
         return True
