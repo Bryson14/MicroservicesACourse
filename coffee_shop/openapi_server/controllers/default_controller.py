@@ -35,7 +35,7 @@ def delete_order(uid):  # noqa: E501
 
     if not order_found:
         print('No order uid found')
-        return 'No Order with this uid Found', 406
+        return 'No order with this uid Found', 406
 
     #rewrite the json file :)
     db_utils.save_db(db)
@@ -57,7 +57,7 @@ def order_uid_get(uid):  # noqa: E501
     order = db_utils.get_value(data, str(uid))
 
     if not order:
-        return "No Order with this uid found", 406
+        return "No order with this uid found", 406
 
     return order
 
@@ -87,7 +87,7 @@ def order_post(new_order=None):  # noqa: E501
         )
 
         if set(new_order.keys()) != required_keys:
-            return 'Required Order items not provided', 401
+            return 'Required order items not provided', 401
         
         required_keys_items = set(
             [
@@ -110,7 +110,7 @@ def order_post(new_order=None):  # noqa: E501
 
         # Return if inserted, else return a internal error
         if inserted:
-            return 'Order Inserted', 200
+            return new_order, 200
         else:
             return 'Error inserting order', 500
 
@@ -158,7 +158,7 @@ def patch_order(uid, status, item=None):  # noqa: E501
             return "Invalid item to add", 401
     
     if status not in ['placed', 'delivered']:
-            return "Invalid status update", 401
+            return "Invalid status update please choose 'placed' or 'delivered'", 401
 
     order_found = False
     for k, v in db["orders"].items():
@@ -171,14 +171,13 @@ def patch_order(uid, status, item=None):  # noqa: E501
                 v["orderItems"].append(item)
 
             order_found = True
-            break
+            db_utils.save_db(db)
+            return v, 200
             
     if not order_found:
         print('No order uid found')
-        return 'No Order with this uid Found', 406
+        return 'No order with this uid found', 406
 
     #rewrite the json file :)
-    db_utils.save_db(db)
-
-    return 'Order Updated', 200
+    
 
