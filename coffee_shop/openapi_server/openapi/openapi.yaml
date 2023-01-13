@@ -2,11 +2,10 @@ openapi: 3.0.3
 info:
   contact:
     email: joshua.haddad@ge.com
-    url: https://github.com/Bryson14/MicroservicesACourse
   description: |-
     This is the best coffee shop in the world, as featured on the hit movie, ELF.
 
-    - [coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
+    - [Coffee shop repository](https://github.com/Bryson14/MicroservicesACourse)
   title: Coffee Shop - OpenAPI 3.0
   version: 1.0.11
 servers:
@@ -16,6 +15,13 @@ paths:
     post:
       description: Place a new unique order onto the queue
       operationId: order_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrder'
+        description: A new order object without time/uid fields of an order
+        required: true
       responses:
         "200":
           content:
@@ -27,45 +33,51 @@ paths:
           content:
             application/json:
               schema:
-                example: Bad request due to duplicate information or whatever
+                example: Invalid item to add
                 type: string
-          description: Bad request message
+          description: "Bad request due to not having required fields for the order,\
+            \ trying to insert an insert an invalid item, or other misformatting errors."
       summary: Add a new order
       x-openapi-router-controller: openapi_server.controllers.default_controller
-  /order/{id}:
+  /order/{uid}:
     delete:
-      description: Canceles an order
+      description: Cancels an order
       operationId: delete_order
       parameters:
-      - description: Order ID to delete
+      - description: Order uid to delete
         explode: false
         in: path
-        name: id
+        name: uid
         required: true
         schema:
           format: int64
           type: integer
         style: simple
       responses:
-        "400":
+        "406":
           content:
             application/json:
               schema:
-                example: Bad request
+                example: No order with this uid found
                 type: string
-          description: "Invalid order ID, please try again."
+          description: Invalid order uid
         "200":
-          description: Order cancelled successfully.
+          content:
+            application/json:
+              schema:
+                example: Order Deleted
+                type: string
+          description: Order Deleted
       summary: Cancels an order
       x-openapi-router-controller: openapi_server.controllers.default_controller
     get:
-      operationId: order_id_get
+      operationId: order_uid_get
       parameters:
-      - description: The id associated with an order
+      - description: The uid associated with an order
         example: 10
         explode: false
         in: path
-        name: id
+        name: uid
         required: true
         schema:
           type: integer
@@ -76,36 +88,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-          description: A JSON representation of a single order given by the id
-        "404":
+          description: A JSON representation of a single order given by the uid
+        "406":
           content:
             application/json:
               schema:
-                example: Order ID not found
+                example: No order with this uid found
                 type: string
-          description: Order ID not found
-      summary: Returns a given order id as json
+          description: Order uid not found
+      summary: Returns a given order uid as json
       x-openapi-router-controller: openapi_server.controllers.default_controller
+  /order/{uid}/{status}:
     patch:
-      description: Update an existing order
-      operationId: path_order
+      description: Update an existing order's status or add a single item to the order.
+      operationId: patch_order
       parameters:
-      - description: Id associated with order
+      - description: Unique id associated with order
         explode: false
         in: path
-        name: id
+        name: uid
         required: true
         schema:
           example: 10
           format: int64
           type: integer
         style: simple
+      - description: Change order status
+        explode: false
+        in: path
+        name: status
+        required: true
+        schema:
+          example: delivered
+          type: string
+        style: simple
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
-        required: true
+              $ref: '#/components/schemas/Item'
+        description: Json of item to add
       responses:
         "200":
           content:
@@ -116,12 +138,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/Order'
           description: Order updated
-        "400":
-          description: Invalid ID supplied
-        "404":
-          description: Order not found
-        "405":
-          description: Validation exception
+        "401":
+          content:
+            application/json:
+              schema:
+                example: Invalid status update please choose 'placed' or 'delivered'
+                type: string
+          description: Invalid format of status or order item to add
+        "406":
+          content:
+            application/json:
+              schema:
+                example: No order with this uid found
+                type: string
+          description: Order with uid provided not found
       summary: Update an existing order
       x-openapi-router-controller: openapi_server.controllers.default_controller
   /orders:
@@ -152,23 +182,23 @@ components:
   schemas:
     Order:
       example:
+        uid: 10
         createdTimestamp: 2000-01-23T04:56:07.000+00:00
         discount: 2.0
-        id: 10
         orderItems:
-        - Price: 6.0274563
-          id: 0
-          Name: Best Latte Ever
-        - Price: 6.0274563
-          id: 0
-          Name: Best Latte Ever
+        - uid: 0
+          price: 6.0274563
+          name: Best Latte Ever
+        - uid: 0
+          price: 6.0274563
+          name: Best Latte Ever
         customerName: Huzaifah Shamim
         status: placed
       properties:
-        id:
+        uid:
           example: 10
           format: int64
-          title: id
+          title: uid
           type: integer
         orderItems:
           items:
@@ -203,33 +233,73 @@ components:
         name: order
     Item:
       example:
-        Price: 6.0274563
-        id: 0
-        Name: Best Latte Ever
+        uid: 0
+        price: 6.0274563
+        name: Best Latte Ever
       properties:
-        id:
+        uid:
           format: int64
-          title: id
+          title: uid
           type: integer
-        Name:
+        name:
           example: Best Latte Ever
-          title: Name
+          title: name
           type: string
-        Price:
+        price:
           format: float
-          title: Price
+          title: price
           type: number
       title: Item
       type: object
       xml:
-        name: order
+        name: item
+    NewOrder:
+      example:
+        discount: 2.0
+        orderItems:
+        - uid: 0
+          price: 6.0274563
+          name: Best Latte Ever
+        - uid: 0
+          price: 6.0274563
+          name: Best Latte Ever
+        customerName: Huzaifah Shamim
+        status: placed
+      properties:
+        orderItems:
+          items:
+            $ref: '#/components/schemas/Item'
+          title: orderItems
+          type: array
+        status:
+          description: Order Status
+          enum:
+          - placed
+          - delivered
+          example: placed
+          title: status
+          type: string
+        customerName:
+          description: The name of the customer ordering
+          example: Huzaifah Shamim
+          title: customerName
+          type: string
+        discount:
+          example: 2.0
+          format: float
+          title: discount
+          type: number
+      title: NewOrder
+      type: object
+      xml:
+        name: new_order
     Customer:
       properties:
-        id:
+        uid:
           example: 10
           format: int64
           type: integer
-        Name:
+        name:
           example: Bryson Meiling
           type: string
         birthday:
@@ -241,4 +311,4 @@ components:
           type: integer
       type: object
       xml:
-        name: order
+        name: customer
